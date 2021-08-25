@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate') %>
+    <h1>All Products</h1>
+    <div>
+        <a href="/products/new">Add product</a>
+    </div>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <% for (let product of products){%>
+            <div class="col">
+                <div class="card h-100">
+                  <img src="<%= product.image %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= product.title %></h5>
+                    <p>Start: <%= product.startTime.toLocaleString() %></p>
+                    <p>End: <%= product.endTime.toLocaleString() %></p>
+                    <a href= "/products/<%= product._id %>" class="btn btn-primary">View More</a>
+                  </div>
+                </div>
+              </div>
+        <% }%>
+    
+

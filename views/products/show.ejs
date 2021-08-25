@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+    <div class="col-6">
+        <div class="card mb-3">
+            <img src="<%= product.image%>" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title"><%= product.title%></h5>
+                <p class="card-text"><%= product.description%></p>
+            </div>
+            <ul class="list-group list-group-flush">
+               
+                <li class="list-group-item">Base Price: <%= product.price%></li>
+                <li class="list-group-item">Start: <%= product.startTime.toLocaleString() %>  ||  End: <%= product.endTime.toLocaleString() %></li>
+            </ul>
+            <div class="card-body">
+                <a class="card-link btn btn-info" href="/products/<%=product._id%>/edit">Edit</a>
+                <form class="d-inline" action="/products/<%=product._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <form action="/products/<%= product._id %>/biddings" method="POST" novalidate class="validated-form">
+        <div class="row">
+            <div class="col-6">
+                <input class="form-control" placeholder="Enter Bid" type="number" min="0" id="price" name="bidding[price]" required>
+                <div class="invalid-feedback">
+                    Please enter a valid Bid.
+                  </div>
+            </div>
+            
+            <div class="col-3">
+
+                <button class="btn btn-success" type="submit">Enter</button>
+            </div>
+                
+           
+        </div>
+    </form>
+
+    </div>
+</div>
+    
+    <footer>
+        <a href="/products">All product</a>
+    </footer>
