@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Bidding = require('./biddings');
 const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
@@ -9,7 +10,8 @@ const ProductSchema = new Schema({
     endTime: Date,
     sold: Boolean,
     category: String,
-    price: String,
+    price: Number,
+    lastbid: Number,
     description: String,
     favCount: Number,
     favdata: Array,
@@ -22,5 +24,16 @@ const ProductSchema = new Schema({
     ]
     
 });
+
+ProductSchema.post('findOneAndDelete', async function(doc){
+    if(doc)
+    {
+        await Bidding.deleteMany({
+            _id: {
+                $in: doc.biddings
+            }
+        })
+    }
+})
 
 module.exports = mongoose.model('Product', ProductSchema);

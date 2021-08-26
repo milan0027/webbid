@@ -23,9 +23,9 @@
     </div>
     <div class="col-6">
         <form action="/products/<%= product._id %>/biddings" method="POST" novalidate class="validated-form">
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-6">
-                <input class="form-control" placeholder="Enter Bid" type="number" min="0" id="price" name="bidding[price]" required>
+                <input class="form-control" placeholder="Enter Bid" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" required>
                 <div class="invalid-feedback">
                     Please enter a valid Bid.
                   </div>
@@ -40,6 +40,16 @@
         </div>
     </form>
 
+    <% let bid=product.biddings %>
+    <% for(let i = bid.length - 1; i>=0; i--){ %>
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Bid <%= i%>: <%= bid[i].price %></h5>
+        </div>
+        
+    </div>
+    <% }%>
     </div>
 </div>
     
