@@ -6,10 +6,13 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user')
 
-
-const products = require('./routes/products')
-const biddings = require('./routes/biddings')
+const userRoutes = require('./routes/users')
+const productsRoutes = require('./routes/products')
+const biddingsRoutes = require('./routes/biddings')
 
 mongoose.connect('mongodb://localhost:27017/bidweb', {
     useNewUrlParser: true,
@@ -48,15 +51,25 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 
 
 app.use((req, res, next) =>{
+    console.log(req.session)
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error')
     next()
 })
-app.use('/products',products)
-app.use('/products/:id/biddings', biddings)
+
+app.use('/', userRoutes)
+app.use('/products',productsRoutes)
+app.use('/products/:id/biddings', biddingsRoutes)
 
 
 app.get('/', (req, res) => {

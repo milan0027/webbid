@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { productSchema } = require('../schemas.js');
+const { isLoggedIn } = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product');
@@ -21,11 +22,11 @@ router.get('/', catchAsync( async (req, res) => {
     res.render('products/index', { products })
 }));
 
-router.get('/new', catchAsync( async (req, res) => {
+router.get('/new', isLoggedIn, catchAsync( async (req, res) => {
     res.render('products/new');
 }))
 
-router.post('/', validateProduct, catchAsync( async (req, res,next) => {
+router.post('/', isLoggedIn, validateProduct, catchAsync( async (req, res,next) => {
    
     const product = new Product(req.body.product);
     product.endTime = Date.parse(product.startTime)+product.duration*3600000 
@@ -45,7 +46,7 @@ router.get('/:id', catchAsync( async (req, res,) => {
     res.render('products/show', { product });
 }));
 
-router.get('/:id/edit', catchAsync( async (req, res) => {
+router.get('/:id/edit',isLoggedIn, catchAsync( async (req, res) => {
     const product = await Product.findById(req.params.id)
     if(!product)
     {
@@ -55,7 +56,7 @@ router.get('/:id/edit', catchAsync( async (req, res) => {
     res.render('products/edit', { product });
 }))
 
-router.put('/:id', validateProduct, catchAsync( async (req, res) => {
+router.put('/:id', isLoggedIn, validateProduct, catchAsync( async (req, res) => {
     const { id } = req.params;
     const inputs = req.body.product
     const endtime = Date.parse(inputs.startTime)+inputs.duration*3600000
@@ -65,7 +66,7 @@ router.put('/:id', validateProduct, catchAsync( async (req, res) => {
     res.redirect(`/products/${product._id}`)
 }));
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id',isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Product.findByIdAndDelete(id);
     req.flash('success','Successfully Deleted the item')
