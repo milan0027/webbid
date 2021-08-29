@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Bidding = require('./biddings');
+const User = require('./user');
 const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
@@ -15,6 +16,10 @@ const ProductSchema = new Schema({
     description: String,
     favCount: Number,
     favdata: Array,
+    owner:{
+              type: Schema.Types.ObjectId,
+              ref: 'User'
+    },
 
     biddings:[
         {

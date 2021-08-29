@@ -4,13 +4,11 @@ const passport = require('passport')
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user')
 
-router.get('/register', (req, res) =>{
-
+router.route('/register')
+.get( (req, res) =>{
     res.render('users/register')
-
 })
-
-router.post('/register',catchAsync( async (req, res, next) =>{
+.post(catchAsync( async (req, res, next) =>{
     //res.send(req.body)
 try{
     const { username, email, password} = req.body;
@@ -32,11 +30,11 @@ try{
     
 }))
 
-router.get('/login', (req,res) =>{
+router.route('/login')
+.get((req,res) =>{
     res.render('users/login')
 })
-
-router.post('/login',passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req,res)=>{
+.post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req,res)=>{
     req.flash('success', 'Welcome back, '+req.body.username);
     const redirectUrl = req.session.returnTo || '/products';
     delete req.session.returnTo;

@@ -29,8 +29,11 @@ const seedDB = async () => {
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://source.unsplash.com/collection/483251',
             price,
+
+            owner: "61291ea211e30c5cf0ce267f",
             description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
             startTime: d.getTime(),
+            duartion: 1.5,
             endTime: d.getTime()+9751405842
 
 
