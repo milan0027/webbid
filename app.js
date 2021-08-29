@@ -5,14 +5,19 @@ const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user')
+const Product = require('./models/product');
 
 const userRoutes = require('./routes/users')
 const productsRoutes = require('./routes/products')
 const biddingsRoutes = require('./routes/biddings')
+const trendRoutes = require('./routes/trending')
+const liveRoutes = require('./routes/live')
+const upcomingRoutes = require('./routes/upcoming')
 
 mongoose.connect('mongodb://localhost:27017/bidweb', {
     useNewUrlParser: true,
@@ -69,7 +74,21 @@ app.use((req, res, next) =>{
 
 app.use('/', userRoutes)
 app.use('/products',productsRoutes)
+app.use('/trending', trendRoutes)
+app.use('/live', liveRoutes)
+app.use('/upcoming', upcomingRoutes)
 app.use('/products/:id/biddings', biddingsRoutes)
+
+app.get('/all/:category', catchAsync(async (req, res)=>{
+
+    const {category} = req.params
+    const d = Date.now()
+    const type = "All"
+    const products = await Product.find({ $and: [ {endTime: { $gte: d}} , {category:category }]});
+    res.render('products/index', { products, category, type})
+
+}))
+
 
 
 app.get('/', (req, res) => {

@@ -16,15 +16,23 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
+
+
+
 module.exports.validateProduct = (req, res, next) => {
-    const { error } = productSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
+
+        const { error } = productSchema.validate(req.body);
+        if (error) {
+            const msg = error.details.map(el => el.message).join(',')
+            throw new ExpressError(msg, 400)
+        } else {
+            next();
+        }
+
+        
+   
 }
+
 
 module.exports.isOwnerAndLimit = async (req, res, next)=>{
     const {id} = req.params;

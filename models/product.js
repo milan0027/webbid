@@ -14,7 +14,10 @@ const ProductSchema = new Schema({
     price: Number,
     lastbid: Number,
     description: String,
-    favCount: Number,
+    favCount:{
+        type: Number,
+        default: 0
+    },
     favdata: Array,
     owner:{
               type: Schema.Types.ObjectId,

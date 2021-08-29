@@ -8,12 +8,21 @@ const Product = require('../models/product');
 
 router.route('/')
 .get(catchAsync( async (req, res) => {
-    const products = await Product.find({});
-    res.render('products/index', { products })
+    const d = Date.now()
+    const type = "All"
+    const category = undefined;
+    const products = await Product.find({endTime:{ $gt: d }});
+    res.render('products/index', { products, category, type })
 }))
 .post( isLoggedIn, validateProduct, catchAsync( async (req, res,next) => {
-   
     const product = new Product(req.body.product);
+    if(Date.now()>=product.startTime){
+        req.flash('error', 'Start Time must be greater than Present Time');
+       return res.redirect(`/products/new`)
+
+    }
+   
+    
     product.endTime = Date.parse(product.startTime)+product.duration*3600000 
     product.lastbid = product.price-1
     product.owner = req.user._id
@@ -29,7 +38,7 @@ router.get('/new', isLoggedIn, catchAsync( async (req, res) => {
 
 
 router.route('/:id')
-.get( catchAsync( async (req, res,) => {
+.get(isLoggedIn, catchAsync( async (req, res,) => {
     const product = await Product.findById(req.params.id).populate({
         path: 'biddings',
         populate: {
@@ -44,10 +53,16 @@ router.route('/:id')
     } 
     res.render('products/show', { product });
 }))
-.put( isLoggedIn,isOwnerAndLimit, validateProduct, catchAsync( async (req, res) => {
+.put( isLoggedIn,isOwnerAndLimit,validateProduct, catchAsync( async (req, res) => {
     const { id } = req.params;
+   
     const inputs = req.body.product
-    const endtime = Date.parse(inputs.startTime)+inputs.duration*3600000
+    const val = Date.parse(inputs.startTime)
+    if(Date.now() >= val){
+        req.flash('error', 'Start Time must be greater than Present Time');
+       return  res.redirect(`/products/${id}/edit`)
+    }
+    const endtime = val + inputs.duration*3600000
     const lastBid = inputs.price-1
     const product = await Product.findByIdAndUpdate(id, { ...req.body.product , endTime: endtime, lastbid: lastBid});
     req.flash('success','Successfully Updated the item')

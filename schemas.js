@@ -7,7 +7,7 @@ module.exports.productSchema = Joi.object({
         description: Joi.string().required(),
         image: Joi.string().required(),
         price: Joi.number().min(0).required(),
-        startTime: Joi.date().required().min(t),
+        startTime: Joi.date().required().min(0),
         duration: Joi.number().required().min(0.5).max(3)
     }).required()
 })
