@@ -67,28 +67,11 @@
                   <a class="nav-link" href="/register">SignUp</a>
                 </li>
                 <% }else{ %> 
-                <li class="nav-item">
-                  <a class="nav-link" href="/logout">LogOut</a>
-                </li>
-                            
- 
                 <a class="navbar-brand"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fas fa-user-circle"></i>  <%= currentUser.username %> </a>
-               
-                 
-
-               
-                
-  
                 <% } %> 
               </ul>
 
             </div>
-           
-
-           <!-- <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>-->
           </div>
         </div>
       </nav>
@@ -100,7 +83,20 @@
           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-          <h3><i class="fas fa-coins"></i>  11000</h3>
+          <h3><i class="fas fa-coins"></i>  <%= currentUser.wallet %> UC </h3>
+          <ul>
+             
+            <li><a href="/user/profile">My Profile</a></li>
+            <li><a href="/user/wallet">E-Wallet</a></li>
+            <li><a href="/user/favorites">Favorites</a></li>
+            <li><a href="/user/itemupload">Items Uploaded</a></li>
+            <li><a href="/user/itemsold">Items Sold</a></li>
+            <li><a href="/user/itembidded">Items Bidded</a></li>    
+            <li><a href="/user/itemwon">Items Won</a></li>
+            <li><a href="/logout">LogOut</a></li>
+            
+
+         </ul>
         </div>
       </div>
       <% } %> 

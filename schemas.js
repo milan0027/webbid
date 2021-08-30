@@ -17,3 +17,9 @@ module.exports.biddingSchema = Joi.object({
         price: Joi.number().required().min(0)
     }).required()
 })
+
+module.exports.walletSchema = Joi.object({
+    walletAdd: Joi.object({
+        wallet: Joi.number().required().min(0).max(100000)
+    }).required()
+})

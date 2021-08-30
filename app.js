@@ -18,6 +18,7 @@ const biddingsRoutes = require('./routes/biddings')
 const trendRoutes = require('./routes/trending')
 const liveRoutes = require('./routes/live')
 const upcomingRoutes = require('./routes/upcoming')
+const LoginUserRoutes = require('./routes/LoginUser')
 
 mongoose.connect('mongodb://localhost:27017/bidweb', {
     useNewUrlParser: true,
@@ -77,6 +78,7 @@ app.use('/products',productsRoutes)
 app.use('/trending', trendRoutes)
 app.use('/live', liveRoutes)
 app.use('/upcoming', upcomingRoutes)
+app.use('/user', LoginUserRoutes)
 app.use('/products/:id/biddings', biddingsRoutes)
 
 app.get('/all/:category', catchAsync(async (req, res)=>{

@@ -1,4 +1,4 @@
-const { productSchema, biddingSchema } = require('./schemas.js');
+const { productSchema, biddingSchema, walletSchema } = require('./schemas.js');
 const ExpressError = require('./utils/ExpressError');
 const Product = require('./models/product');
 
@@ -50,6 +50,14 @@ module.exports.isOwnerAndLimit = async (req, res, next)=>{
     next();
 }
 
+module.exports.validateWalletValue = (req, res, next) =>{
+    const {error} = walletSchema.validate(req.body)
+    if(error){
+        req.flash('error', 'Please Enter a Valid Value')
+        return res.redirect('/user/wallet')
+    }
+    next();
+}
 module.exports.validateBidding = (req, res, next) => {
     const { error } = biddingSchema.validate(req.body);
     if (error) {
