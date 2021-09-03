@@ -23,6 +23,10 @@ const UserSchema = new Schema({
     itemsWon: [{
         type: Schema.Types.ObjectId,
         ref: 'Product'
+    }],
+    transactions: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Transaction'
     }]
 });
 

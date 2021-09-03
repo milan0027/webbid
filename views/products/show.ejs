@@ -28,17 +28,6 @@
                 <li class="nav-item">
                   <a class="nav-link" href="/trending">Trending</a>
                 </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Link
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/live">Live</a>
                 </li>
@@ -67,7 +56,7 @@
                   <a class="nav-link" href="/register">SignUp</a>
                 </li>
                 <% }else{ %> 
-                <a class="navbar-brand"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fas fa-user-circle"></i>  <%= currentUser.username %> </a>
+                <a class="navbar-brand"  href="#offcanvasExample" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fas fa-user-circle"></i>  <%= currentUser.username %> </a>
                 <% } %> 
               </ul>
 
@@ -189,7 +178,7 @@
                         <li class="list-group-item"><div class="row">
                             <div class="col-8">
         
-                                <span style="font-weight:700;">Base Price: </span><%= product.price%> UC
+                                <span style="font-weight:700;">Base Value: </span><%= product.price%> UC
                             </div>
                             <div class="col-4" >
                                 <form class="d-inline" action="/products/<%=product._id%>/favorite?_method=PUT" method="POST">
@@ -203,28 +192,60 @@
                                  <span style="font-weight: 400; font-size: 20px ;"><%=product.favCount %> </span>
                             </div>
                         </div></li>
-                        <li class="list-group-item"><span style="font-weight:700;">Start: </span><%= product.startTime.toLocaleString() %>  ||  <span style="font-weight:700;">End: </span><%= product.endTime.toLocaleString() %></li>
+                        <li class="list-group-item">
+                          <div class="row">
+
+                            <div class="col-md-6">
+                              <span style="font-weight:700;">Start: </span><%= product.startTime.toLocaleString('en-GB') %>
+                            </div>
+
+                            
+                            <div class="col-md-6">
+                              <span style="font-weight:700;">End: </span><%= product.endTime.toLocaleString('en-GB') %>
+                            </div>
+                          </div>
+                          
+                        </li>
                     </ul>
                     <div class="card-body" >
         
+                      <div class="row">
                         <% if(currentUser && product.owner.equals(currentUser._id)){ %> 
                             <% if(Date.now()>=product.startTime) { %>
-                        <a class="card-link btn btn-info disabled" href="/products/<%=product._id%>/edit">Edit</a>
-                        <form class="d-inline" action="/products/<%=product._id%>?_method=DELETE" method="POST">
-                            <button class="btn btn-danger" disabled>Delete</button>
+                              <div class="col">
+                                <a class="card-link btn btn-info disabled" style="width: 100%;" href="/products/<%=product._id%>/edit">Edit</a>
+                              </div>
+                        
+                        <div class="col">
+                          <form class="d-inline" action="/products/<%=product._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger" style="width: 100%;" disabled>Delete</button>
                         </form>
+                        </div>
+                       
                            <% } else { %> 
         
-                            <a class="card-link btn btn-info" href="/products/<%=product._id%>/edit">Edit</a>
-                        <form class="d-inline" action="/products/<%=product._id%>?_method=DELETE" method="POST">
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
+                            <div class="col">
+                              <a class="card-link btn btn-info" style="width: 100%;" href="/products/<%=product._id%>/edit">Edit</a>
+                            </div>
+                            
+                            <div class="col">
+                              <form class="d-inline" action="/products/<%=product._id%>?_method=DELETE" method="POST">
+                                <button class="btn btn-danger" style="width: 100%;">Delete</button>
+                            </form>
+                            </div>
+                        
                             <% } %> 
                         <% } %> 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <div class="col">
+                          <a class="card-link btn btn-success" style="width: 100%;" href="https://www.google.com/search?tbm=shop&q=<%= product.title %> <%= product.description %>&hl=en-GB" target="__blank">Compare</a>
+                        </div>
+                        <div class="col">
+                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width: 100%;">
                             Share
                           </button>
-                          
+                        </div>
+                        
+                        </div>
                             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -233,7 +254,15 @@
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                      ...
+                                      <a class="d-inline ps-2" id="whatsapp" target="__blank">
+                                        <img src="/logo/icons8-whatsapp-48.png" height="48" width="48">
+                                      </a>
+                                      <a class="d-inline ps-2" id="telegram" target="__blank">
+                                        <img src="/logo/icons8-telegram-app-48.png" height="48" width="48">
+                                      </a>
+                                      <a class="d-inline ps-2" id="twitter" target="__blank">
+                                        <img src="/logo/icons8-twitter-circled-48.png" height="48" width="48">
+                                      </a>
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -241,6 +270,7 @@
                                   </div>
                                 </div>
                               </div>
+
                           
                     </div>
                     <div class="card-footer text-muted">
@@ -289,29 +319,45 @@
                 <% } %> 
         
             <% let bid=product.biddings %>
+            <% let colors = ["table-primary","table-secondary","table-success","table-danger","table-warning","table-info","table-light"] %> 
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Username</th>
+                  <th scope="col">Bid Value</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <% if(bid.length == 0){ %> 
+                  <tr>
+                    <th scope="row">No Bids Placed</th>
+                    
+                  </tr>
+
+                  <%} %> 
             <% for(let i = bid.length - 1; i>=0; i--){ %>
         
-            <div class="card">
-                <div class="card-body">
-                    <h6><%= bid[i].owner.username %>: <%= bid[i].price %></h6>
-                </div>
-                
-            </div>
+            
+                  <tr class="<%= colors[i%7] %> ">
+                    <th scope="row">@<%= bid[i].owner.username %></th>
+                    <td><%= bid[i].price %> UC</td>
+                  </tr>
+                   
             <% }%>
+          </tbody>
+        </table>
             </div>
         </div>
-            
-            <footer>
-                <a href="/products">All product</a>
-            </footer>
-        
-
     </main>
     
     <script src='/javascripts/validateinput.js' ></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
 <script>
+    document.getElementById("whatsapp").href  = "https://web.whatsapp.com/send?text=" + window.location.href;
+    document.getElementById("telegram").href  = "https://telegram.me/share/url?url=" + window.location.href;
+    document.getElementById("twitter").href  = "https://twitter.com/share?url=" + window.location.href;
     var present = Date.now();
     var end = Date.parse('<%=product.endTime%>')
     if(present <= end )

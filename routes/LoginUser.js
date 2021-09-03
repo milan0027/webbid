@@ -4,15 +4,28 @@ const { isLoggedIn, validateWalletValue} = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
 const Product = require('../models/product');
 const User = require('../models/user')
+const Tran = require('../models/transactions')
 
 router.route('/wallet')
 .get(isLoggedIn, catchAsync( async(req, res) =>{
-     res.render('products/wallet')
+    const user = await User.findById(req.user._id).populate('transactions');
+    const tran = user.transactions;
+     res.render('products/wallet', { tran })
 }))
 .put( isLoggedIn, validateWalletValue, catchAsync( async(req,res) =>{
     const id = req.user._id
     const updateValue = parseInt(req.body.walletAdd.wallet) + req.user.wallet
-    const user  = await User.findByIdAndUpdate(id, { wallet: updateValue});
+    const tran = new Tran();
+    tran.amt = parseInt(req.body.walletAdd.wallet);
+    tran.name = "Self";
+    tran.date = Date.now();
+    tran.way  = "Self Added";
+    const user  = await User.findById(id);
+    await user.transactions.push(tran);
+    user.wallet = updateValue;
+    await tran.save();
+    await user.save();
+    
     req.flash('success', 'Value Added Successfully')
     res.redirect('/user/wallet')
 }))
@@ -30,6 +43,11 @@ router.put('/:id/remove', isLoggedIn, catchAsync( async(req, res)=>{
     const user = await User.findById(req.user._id);
     const {id} = req.params;
     const product = await Product.findById(id);
+    if(!product)
+    {
+        req.flash('error','Item does not Exist or is Deleted')
+        return res.redirect('/products')
+    } 
     const ind  = await user.favorites.indexOf(id);
         await user.favorites.splice(ind,1);
         product.favCount--;

@@ -6,6 +6,7 @@ const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product');
 const User = require('../models/user');
+const Tran =  require('../models/transactions')
 
 router.route('/')
 .get(catchAsync( async (req, res) => {
@@ -96,6 +97,11 @@ router.put('/:id/favorite', isLoggedIn, catchAsync( async(req, res)=>{
     const user = await User.findById(req.user._id);
     const {id} = req.params;
     const product = await Product.findById(id);
+    if(!product)
+    {
+        req.flash('error','Item does not Exist or is Deleted')
+        return res.redirect('/products')
+    } 
     const ind  = await user.favorites.indexOf(id);
     if(ind == -1)
     {
@@ -122,13 +128,32 @@ router.put('/:id/transaction', isLoggedIn, isOwnerAndCondition, catchAsync( asyn
     const product = await Product.findById(id);
     const owner = await User.findById(req.user._id);
     const buyer  = await User.findById(product.lastbidder);
+    const tranOwner  =  new Tran();
+    const tranBuyer =  new Tran();
+
+    tranOwner.amt = product.lastbid;
+    tranOwner.name = buyer.username;
+    tranOwner.date = Date.now();
+    tranOwner.way = "Sold " + product.title;
+
+    tranBuyer.amt = 0 - product.lastbid;
+    tranBuyer.name = owner.username;
+    tranBuyer.date = Date.now();
+    tranBuyer.way = "Won " + product.title;
+
     owner.wallet+= product.lastbid;
     buyer.wallet-=product.lastbid;
     product.sold = true;
+
+    await owner.transactions.push(tranOwner);
+    await buyer.transactions.push(tranBuyer);
+    await tranOwner.save();
+    await tranBuyer.save();
     await buyer.itemsWon.push(product);
     await product.save();
     await owner.save();
     await buyer.save();
+
     req.flash('success','Transaction was Successful');
     res.redirect(`/products/${id}`);
 

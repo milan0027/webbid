@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webbid</title>
     <link href="/stylesheets/css/all.css" rel="stylesheet">
+    <link href="/stylesheets/index.css" rel = "stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
 
-   
   </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -27,17 +27,6 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/trending">Trending</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Link
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/live">Live</a>
@@ -67,7 +56,9 @@
                   <a class="nav-link" href="/register">SignUp</a>
                 </li>
                 <% }else{ %> 
-                <a class="navbar-brand"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fas fa-user-circle"></i>  <%= currentUser.username %> </a>
+                  
+                <a class="navbar-brand" href="#offcanvasExample" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fas fa-user-circle"></i>  <%= currentUser.username %> </a>
+              
                 <% } %> 
               </ul>
 

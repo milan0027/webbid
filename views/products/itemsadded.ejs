@@ -30,19 +30,27 @@
                                         <% } %> 
 
 </div>
+<% if(products.length == 0){ %> 
+    <h5>No Items Here</h5>
+    <% } %>
 <div class="row row-cols-1 row-cols-md-4 g-4">
     <% for (let product of products){%>
         <div class="col">
-            <div class="card h-100">
-              <img src="<%= product.image %>" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title"><%= product.title %>   <%= product.favCount %> </h5>
-                <p>Start: <%= product.startTime.toLocaleString() %></p>
-                <p>End: <%= product.endTime.toLocaleString() %></p>
-                <a href= "/products/<%= product._id %>" class="btn btn-primary">View More</a>
+            <a class="cardItem" href="/products/<%= product._id %>">
+              <div class="card h-100">
+                <img src="<%= product.image %>" class="card-img-top" alt="...">
+                
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><h5 class="card-title"><%= product.title %></h5></li>
+                  <li class="list-group-item"><span style="font-weight:700;">Start: </span><%= product.startTime.toLocaleString('en-GB') %></li>
+                  <li class="list-group-item"><span style="font-weight:700;">End: </span><%= product.endTime.toLocaleString('en-GB') %></li>
+                  <li class="list-group-item"><span style="font-weight:700;"><%= product.price%> UC</span></li>
+                  
+                </ul>
+               
                 
               </div>
+            </a>
             </div>
-          </div>
     <% }%>
 </div>

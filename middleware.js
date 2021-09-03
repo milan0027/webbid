@@ -53,6 +53,11 @@ module.exports.isOwnerAndLimit = async (req, res, next)=>{
 module.exports.isOwnerAndCondition = async (req, res, next)=>{
     const {id} = req.params;
     const product = await Product.findById(id);
+    if(!product)
+    {
+        req.flash('error','Item does not Exist or is Deleted')
+        return res.redirect('/products')
+    } 
     if(Date.now() <= product.endTime || product.sold || product.biddings.length==0)
     {
         req.flash('error', 'Action Not Allowed!!!')
