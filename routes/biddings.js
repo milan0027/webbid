@@ -27,6 +27,7 @@ router.post('/',isLoggedIn, validateBidding, catchAsync(async (req, res) => {
     }
     await product.biddings.push(bidding);
     product.lastbid = bidding.price
+    product.lastbidder = req.user._id;
     bidding.owner = req.user._id;
     await bidding.save();
     await product.save();

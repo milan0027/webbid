@@ -87,11 +87,11 @@
              <li><a href="/user/profile">My Profile</a></li>
              <li><a href="/user/wallet">E-Wallet</a></li>
              <li><a href="/user/favorites">Favorites</a></li>
-             <li><a href="/user/itemupload">Items Uploaded</a></li>
-             <li><a href="/user/itemsold">Items Sold</a></li>
-             <li><a href="/user/itembidded">Items Bidded</a></li>    
-             <li><a href="/user/itemwon">Items Won</a></li>
-             <li><a href="/logout">LogOut</a></li>
+             <li><a href="/products/new">Add Item</a></li>
+             <li><a href="/user/itemsadded">Items Added</a></li> 
+             <li><a href="/user/itemswon">Items Won</a></li>
+             <li><a href="/user/location">Location</a></li>
+             <li><a href="/logout">Log Out</a></li>
              
 
           </ul>
@@ -121,7 +121,7 @@
           </ul>
         </div>
       </div>
-    <main class="container mt-5">
+    <main class="container mt-3">
       <% if(success && success.length) {%>
         <div class="alert alert-dark alert-dismissible fade show" role="alert">
             <%= success %>
@@ -144,9 +144,6 @@
           <% } }else{%>
             <h1>No Items Found</h1>
             <% } %> 
-        <div>
-            <a href="/products/new">Add product</a>
-        </div>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             <% for (let product of products){%>
                 <div class="col">

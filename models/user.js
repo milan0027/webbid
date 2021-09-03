@@ -11,7 +11,19 @@ const UserSchema = new Schema({
     wallet:{
         type: Number,
         default: 0
-    }
+    },
+    favorites: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
+    itemsAdded:[{
+        type: Schema.Types.ObjectId,
+        ref:'Product'
+    }],
+    itemsWon: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
+    }]
 });
 
 UserSchema.plugin(passportLocalMongoose);

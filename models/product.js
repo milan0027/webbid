@@ -9,10 +9,14 @@ const ProductSchema = new Schema({
     startTime: Date,
     duration: Number,
     endTime: Date,
-    sold: Boolean,
+    sold: {
+        type: Boolean,
+        default: false
+    },
     category: String,
     price: Number,
     lastbid: Number,
+    lastbidder: String,
     description: String,
     favCount:{
         type: Number,

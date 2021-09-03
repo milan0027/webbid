@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="mb-3">
+    <h1>Items Added</h1>
+    <% if(type=="All") {%> 
+    <a class="btn btn-info" href="/user/itemsadded" >All</a>
+    <% }else { %>
+        <a class="btn btn-dark" href="/user/itemsadded" >All</a>
+        <% } %> 
+
+        <% if(type=="Live") {%> 
+            <a class="btn btn-info" href="/user/itemsadded/live" >Live</a>
+            <% }else { %>
+                <a class="btn btn-dark" href="/user/itemsadded/live" >Live</a>
+                <% } %> 
+                <% if(type=="Scheduled") {%> 
+                    <a class="btn btn-info"  href="/user/itemsadded/scheduled" >Scheduled</a>
+                    <% }else { %>
+                        <a class="btn btn-dark" href="/user/itemsadded/scheduled" >Scheduled</a>
+                        <% } %> 
+                        <% if(type=="BiddingOver") {%> 
+                            <a class="btn btn-info" href="/user/itemsadded/biddingover" >Bidding Over</a>
+                            <% }else { %>
+                                <a class="btn btn-dark" href="/user/itemsadded/biddingover"  >Bidding Over</a>
+                                <% } %> 
+                                <% if(type=="Sold") {%> 
+                                    <a class="btn btn-info" href="/user/itemsadded/sold" >Sold</a>
+                                    <% }else { %>
+                                        <a class="btn btn-dark" href="/user/itemsadded/sold" >Sold</a>
+                                        <% } %> 
+
+</div>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    <% for (let product of products){%>
+        <div class="col">
+            <div class="card h-100">
+              <img src="<%= product.image %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title"><%= product.title %>   <%= product.favCount %> </h5>
+                <p>Start: <%= product.startTime.toLocaleString() %></p>
+                <p>End: <%= product.endTime.toLocaleString() %></p>
+                <a href= "/products/<%= product._id %>" class="btn btn-primary">View More</a>
+                
+              </div>
+            </div>
+          </div>
+    <% }%>
+</div>

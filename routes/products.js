@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { productSchema } = require('../schemas.js');
-const { isLoggedIn, validateProduct, isOwnerAndLimit} = require('../middleware');
+const { isLoggedIn, validateProduct, isOwnerAndLimit, isOwnerAndCondition} = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product');
+const User = require('../models/user');
 
 router.route('/')
 .get(catchAsync( async (req, res) => {
@@ -15,6 +16,7 @@ router.route('/')
     res.render('products/index', { products, category, type })
 }))
 .post( isLoggedIn, validateProduct, catchAsync( async (req, res,next) => {
+    const user = await User.findById(req.user._id);
     const product = new Product(req.body.product);
     if(Date.now()>=product.startTime){
         req.flash('error', 'Start Time must be greater than Present Time');
@@ -26,6 +28,8 @@ router.route('/')
     product.endTime = Date.parse(product.startTime)+product.duration*3600000 
     product.lastbid = product.price-1
     product.owner = req.user._id
+    await user.itemsAdded.push(product);
+    await user.save();
     await product.save();
     req.flash('success','Successfully added a new item')
     res.redirect(`/products/${product._id}`)
@@ -51,6 +55,8 @@ router.route('/:id')
         req.flash('error','Item does not Exist or is Deleted')
         return res.redirect('/products')
     } 
+    
+
     res.render('products/show', { product });
 }))
 .put( isLoggedIn,isOwnerAndLimit,validateProduct, catchAsync( async (req, res) => {
@@ -85,5 +91,48 @@ router.get('/:id/edit',isLoggedIn,isOwnerAndLimit, catchAsync( async (req, res) 
     } 
     res.render('products/edit', { product });
 }))
+
+router.put('/:id/favorite', isLoggedIn, catchAsync( async(req, res)=>{
+    const user = await User.findById(req.user._id);
+    const {id} = req.params;
+    const product = await Product.findById(id);
+    const ind  = await user.favorites.indexOf(id);
+    if(ind == -1)
+    {
+        await user.favorites.push(id);
+        product.favCount++;
+        req.flash('success','Item Added to Favorites');
+    }
+    else
+    {
+        await user.favorites.splice(ind,1);
+        product.favCount--;
+        req.flash('success','Item Removed from Favorites');
+    }
+    await user.save();
+    await product.save();
+    res.redirect(`/products/${id}`);
+
+    
+}))
+
+router.put('/:id/transaction', isLoggedIn, isOwnerAndCondition, catchAsync( async( req, res)=>{
+
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    const owner = await User.findById(req.user._id);
+    const buyer  = await User.findById(product.lastbidder);
+    owner.wallet+= product.lastbid;
+    buyer.wallet-=product.lastbid;
+    product.sold = true;
+    await buyer.itemsWon.push(product);
+    await product.save();
+    await owner.save();
+    await buyer.save();
+    req.flash('success','Transaction was Successful');
+    res.redirect(`/products/${id}`);
+
+}))
+
 
 module.exports = router

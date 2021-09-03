@@ -1,0 +1,24 @@
+<% layout('layouts/boilerplate') %>
+
+<h1>Items Won</h1>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+ 
+    <% for (let i=products.length - 1; i>=0; i--){%>
+      <% let product = products[i]; %> 
+        <div class="col">
+            <div class="card h-100">
+              <img src="<%= product.image %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title"><%= product.title %>   <%= product.favCount %> </h5>
+                <p>Start: <%= product.startTime.toLocaleString() %></p>
+                <p>End: <%= product.endTime.toLocaleString() %></p>
+                <a href= "/products/<%= product._id %>" class="btn btn-primary">View More</a>
+                <form class="d-inline" action="/user/<%= product._id %>/remove?_method=PUT" method="POST">
+                    <button class="btn btn-danger">Remove</button>
+                </form>
+                
+              </div>
+            </div>
+          </div>
+    <% }%>
+</div>

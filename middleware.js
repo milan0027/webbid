@@ -50,6 +50,22 @@ module.exports.isOwnerAndLimit = async (req, res, next)=>{
     next();
 }
 
+module.exports.isOwnerAndCondition = async (req, res, next)=>{
+    const {id} = req.params;
+    const product = await Product.findById(id);
+    if(Date.now() <= product.endTime || product.sold || product.biddings.length==0)
+    {
+        req.flash('error', 'Action Not Allowed!!!')
+        return res.redirect(`/products/${id}`)
+    }
+    if(!product.owner.equals(req.user._id))
+    {
+        req.flash('error', 'Action Not Allowed!!!')
+        return res.redirect(`/products/${id}`)
+    }
+    next();
+}
+
 module.exports.validateWalletValue = (req, res, next) =>{
     const {error} = walletSchema.validate(req.body)
     if(error){
