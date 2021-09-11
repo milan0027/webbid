@@ -8,6 +8,23 @@
     <link href="/stylesheets/css/all.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
+    <style>
+     
+      .contain {
+  position: relative;
+  
+  margin: 0 ; /* Center it */
+}
+      .contain .content {
+  position: absolute; /* Position the background text */
+  bottom: 0; /* At the bottom. Use top:0 to append it to the top */
+  background: rgb(0, 0, 0); /* Fallback color */
+  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+  color: #f1f1f1; /* Grey text */
+  width: 100%; /* Full width */
+  padding: 15px; /* Some padding */
+}
+    </style>
 
    
   </head>
@@ -168,7 +185,15 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-3">
-                    <img src="<%= product.image%>" class="card-img-top" alt="...">
+                  <div class="contain">
+                    <img src="<%= product.image[0].url%>" class="card-img-top" alt="...">
+                    <div class="content">
+                      <a  data-bs-toggle="modal" href="#exampleModal2">
+                        Launch demo modal
+                      </a>
+                    </div>
+                  </div>
+                  
                     <div class="card-body">
                         <h5 class="card-title"><%= product.title%></h5>
                         <p class="card-text"><%= product.description%></p>
@@ -267,6 +292,43 @@
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl" >
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">All Images</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                      <div id="carouselExampleControls" class="carousel slide carousel-dark" data-bs-ride="carousel">
+                                        <div class="carousel-inner" style="margin-left: auto;
+                                        margin-right: auto; width: 70%;">
+                                          <div class="carousel-item active">
+                                            <img src="<%= product.image[0].url %>" class="d-block w-100" alt="...">
+                                            
+                                          </div>
+                                          <% for(let i=1;i<product.image.length;i++) {%> 
+                                          <div class="carousel-item">
+                                            
+                                            <img src="<%= product.image[i].url %>" class="d-block w-100" alt="...">
+                                          </div>
+                                          <% } %> 
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                          <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                          <span class="visually-hidden">Next</span>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    
                                   </div>
                                 </div>
                               </div>

@@ -6,7 +6,10 @@ const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Product = require('../models/product');
 const User = require('../models/user');
-const Tran =  require('../models/transactions')
+const Tran =  require('../models/transactions');
+const multer = require('multer');
+const { storage, cloudinary} = require('../cloudinary');
+const upload = multer({ storage });
 
 router.route('/')
 .get(catchAsync( async (req, res) => {
@@ -16,7 +19,7 @@ router.route('/')
     const products = await Product.find({endTime:{ $gt: d }});
     res.render('products/index', { products, category, type })
 }))
-.post( isLoggedIn, validateProduct, catchAsync( async (req, res,next) => {
+.post( isLoggedIn,  upload.array('image'), validateProduct, catchAsync( async (req, res,next) => {
     const user = await User.findById(req.user._id);
     const product = new Product(req.body.product);
     if(Date.now()>=product.startTime){
@@ -27,8 +30,11 @@ router.route('/')
    
     
     product.endTime = Date.parse(product.startTime)+product.duration*3600000 
-    product.lastbid = product.price-1
+    product.lastbid = product.price-1;
+    
+    product.image = req.files.map(f=>({ url: f.path, filename: f.filename}))
     product.owner = req.user._id
+    //console.log(product)
     await user.itemsAdded.push(product);
     await user.save();
     await product.save();
@@ -60,7 +66,7 @@ router.route('/:id')
 
     res.render('products/show', { product });
 }))
-.put( isLoggedIn,isOwnerAndLimit,validateProduct, catchAsync( async (req, res) => {
+.put( isLoggedIn,isOwnerAndLimit, upload.array('image'),validateProduct, catchAsync( async (req, res) => {
     const { id } = req.params;
    
     const inputs = req.body.product
@@ -72,6 +78,9 @@ router.route('/:id')
     const endtime = val + inputs.duration*3600000
     const lastBid = inputs.price-1
     const product = await Product.findByIdAndUpdate(id, { ...req.body.product , endTime: endtime, lastbid: lastBid});
+    const temp = req.files.map(f=>({ url: f.path, filename: f.filename}))
+    await product.image.push(...temp)
+    await product.save();
     req.flash('success','Successfully Updated the item')
     res.redirect(`/products/${product._id}`)
 }))
@@ -147,12 +156,8 @@ router.put('/:id/transaction', isLoggedIn, isOwnerAndCondition, catchAsync( asyn
 
     await owner.transactions.push(tranOwner);
     await buyer.transactions.push(tranBuyer);
-    await tranOwner.save();
-    await tranBuyer.save();
     await buyer.itemsWon.push(product);
-    await product.save();
-    await owner.save();
-    await buyer.save();
+    await Promise.all[tranOwner.save(), tranBuyer.save(), product.save(), owner.save(), buyer.save() ];
 
     req.flash('success','Transaction was Successful');
     res.redirect(`/products/${id}`);

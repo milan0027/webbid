@@ -4,7 +4,7 @@
         
         <div class="col-md-6 ms-auto me-auto">
             <h1>Edit Product</h1>
-        <form action="/products/<%=product._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+        <form action="/products/<%=product._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="product[title]" readonly required value="<%=product.title %>">
@@ -21,12 +21,9 @@
                     </div>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="title">Image URL</label>
-                <input class="form-control" type="text" id="title" value="https://source.unsplash.com/collection/483251" name="product[image]" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
+                <label for="formFileMultiple" class="form-label">Add Images</label>
+                <input class="form-control" type="file" name="image" id="formFileMultiple" multiple>
+              </div>
             <div class="mb-3">
                 <label class="form-label" for="price">Base Price</label>
                 <input class="form-control" type="number" min="0" id="price" name="product[price]" required value="<%=product.price %>">

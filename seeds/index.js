@@ -28,7 +28,10 @@ const seedDB = async () => {
         const d = new Date();
         const pro = new Product({
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: 'https://source.unsplash.com/collection/483251',
+            image: [{
+                url: 'https://res.cloudinary.com/webbid/image/upload/v1630764070/Webbid/kqovfbymzexrjojsuhfu.png',
+                filename: 'Webbid/kqovfbymzexrjojsuhfu'
+              }],
             price,
             owner: "61291ea211e30c5cf0ce267f",
             favCount: Math.floor(Math.random()*100),

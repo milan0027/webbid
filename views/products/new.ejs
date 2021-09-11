@@ -2,7 +2,7 @@
 <div class="row">
     <h1 class="text-center">New Product</h1>
     <div class="col-6 offset-3">
-    <form action="/products" method="POST" novalidate class="validated-form">
+    <form action="/products" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label" for="title">Title</label>
             <input class="form-control" type="text" id="title" name="product[title]" required>
@@ -18,13 +18,19 @@
                     Looks good!
                 </div>
         </div>
+
+       
         <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">Add Images</label>
+            <input class="form-control" type="file" name="image" id="formFileMultiple" multiple>
+          </div>
+        <!-- <div class="mb-3">
             <label class="form-label" for="title">Image URL</label>
             <input class="form-control" type="text" id="title" value="https://source.unsplash.com/collection/483251" name="product[image]" required>
             <div class="valid-feedback">
                 Looks good!
             </div>
-        </div>
+        </div> -->
         <div class="mb-3">
             <label class="form-label" for="price">Base Price</label>
             <input class="form-control" type="number" min="0" id="price" name="product[price]" required>

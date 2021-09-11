@@ -5,7 +5,10 @@ const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
     title: String,
-    image: String,
+    image: [ {
+        url: String,
+        filename: String
+    }],
     startTime: Date,
     duration: Number,
     endTime: Date,
