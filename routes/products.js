@@ -32,7 +32,7 @@ router.route('/')
     product.endTime = Date.parse(product.startTime)+product.duration*3600000 
     product.lastbid = product.price-1;
     
-    product.image = req.files.map(f=>({ url: f.path, filename: f.filename}))
+    product.image = req.files.map(f=>({ url: f.path.replace('upload/','upload/w_800,h_600,c_pad,b_white/'), filename: f.filename}))
     product.owner = req.user._id
     //console.log(product)
     await user.itemsAdded.push(product);
@@ -78,7 +78,7 @@ router.route('/:id')
     const endtime = val + inputs.duration*3600000
     const lastBid = inputs.price-1
     const product = await Product.findByIdAndUpdate(id, { ...req.body.product , endTime: endtime, lastbid: lastBid});
-    const temp = req.files.map(f=>({ url: f.path, filename: f.filename}))
+    const temp = req.files.map(f=>({ url: f.path.replace('upload/','upload/w_800,h_400,c_pad,b_white/'), filename: f.filename}))
     await product.image.push(...temp)
     await product.save();
     req.flash('success','Successfully Updated the item')
@@ -86,6 +86,10 @@ router.route('/:id')
 }))
 .delete(isLoggedIn,isOwnerAndLimit, catchAsync(async (req, res) => {
     const { id } = req.params;
+    const user  =  await User.findById(req.user._id);
+    const ind = user.itemsAdded.indexOf(id);
+    await user.itemsAdded.splice(ind, 1);
+    await user.save();
     await Product.findByIdAndDelete(id);
     req.flash('success','Successfully Deleted the item')
     res.redirect('/products');
@@ -153,6 +157,7 @@ router.put('/:id/transaction', isLoggedIn, isOwnerAndCondition, catchAsync( asyn
     owner.wallet+= product.lastbid;
     buyer.wallet-=product.lastbid;
     product.sold = true;
+    owner.itemsSold++;
 
     await owner.transactions.push(tranOwner);
     await buyer.transactions.push(tranBuyer);

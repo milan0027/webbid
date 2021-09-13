@@ -6,6 +6,11 @@ const Product = require('../models/product');
 const User = require('../models/user')
 const Tran = require('../models/transactions')
 
+
+router.get('/profile', isLoggedIn, catchAsync( async(req, res)=>{
+    res.render('products/profile')
+}))
+
 router.route('/wallet')
 .get(isLoggedIn, catchAsync( async(req, res) =>{
     const user = await User.findById(req.user._id).populate('transactions');
@@ -124,5 +129,22 @@ router.get('/itemswon', isLoggedIn, catchAsync( async( req, res)=>{
 
 }))
 
+router.route('/location')
+.get( isLoggedIn, catchAsync( async(req, res)=>{
+    const location  = req.user.location;
+   
+    res.render('products/location',{ location });
+}))
+.put( isLoggedIn, catchAsync( async(req, res)=>{
+    const location  = req.body.location;
+    if(location.trim()=="")
+    {
+        req.flash('error','Please provide a valid Location')
+        return res.redirect('/user/location')
+    }
+    const user = await User.findByIdAndUpdate(req.user._id,{location: location})
+    res.redirect('/user/location');
+
+}))
 module.exports = router
 

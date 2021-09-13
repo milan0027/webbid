@@ -12,6 +12,14 @@ const UserSchema = new Schema({
         type: Number,
         default: 0
     },
+    location:{
+        type: String,
+        default: ""
+    },
+    itemsSold:{
+        type: Number,
+        default: 0
+    },
     favorites: [{
         type: Schema.Types.ObjectId,
         ref: 'Product'
