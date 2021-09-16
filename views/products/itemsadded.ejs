@@ -2,6 +2,7 @@
 
 <div class="mb-3">
     <h1>Items Added</h1>
+    
     <% if(type=="All") {%> 
     <a class="btn btn-info" href="/user/itemsadded" >All</a>
     <% }else { %>
@@ -30,6 +31,7 @@
                                         <% } %> 
 
 </div>
+<hr>
 <% if(products.length == 0){ %> 
     <h5>No Items Here</h5>
     <% } %>
@@ -38,11 +40,19 @@
         <div class="col">
             <a class="cardItem" href="/products/<%= product._id %>">
               <div class="card h-100">
-                <img src="<%= product.image.url %>" class="card-img-top" alt="...">
+                <% if(product.image.length == 0){ %> 
+                    <img src="https://homestaymatch.com/images/no-image-available.png" class="card-img-top" alt="...">
+                    <% }else { %> 
+                      <img src="<%= product.image[0].url%>" class="card-img-top" alt="...">
+                      <% } %> 
                 
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item"><h5 class="card-title"><%= product.title %></h5></li>
-                  <li class="list-group-item"><span style="font-weight:700;">Start: </span><%= product.startTime.toLocaleString('en-GB') %></li>
+                  <% if(product.endTime >= Date.now() && product.startTime <= Date.now()){ %> 
+                    <li class="list-group-item"><span style="font-weight:700; color: red;"><i class="fas fa-circle"></i> Live</li>
+                    <% } else { %> 
+                      <li class="list-group-item"><span style="font-weight:700;">Start: </span><%= product.startTime.toLocaleString('en-GB') %></li>
+                      <% } %> 
                   <li class="list-group-item"><span style="font-weight:700;">End: </span><%= product.endTime.toLocaleString('en-GB') %></li>
                   <li class="list-group-item"><span style="font-weight:700;"><%= product.price%> UC</span></li>
                   

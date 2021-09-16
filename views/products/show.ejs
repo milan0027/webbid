@@ -7,25 +7,15 @@
     <title>Webbid</title>
     <link href="/stylesheets/css/all.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-
-    <style>
-     
-      .contain {
-  position: relative;
   
-  margin: 0 ; /* Center it */
-}
-      .contain .content {
-  position: absolute; /* Position the background text */
-  bottom: 0; /* At the bottom. Use top:0 to append it to the top */
-  background: rgb(0, 0, 0); /* Fallback color */
-  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
-  color: #f1f1f1; /* Grey text */
-  width: 100%; /* Full width */
-  padding: 15px; /* Some padding */
-}
-    </style>
-
+    <script> 
+      const endTime = '<%= product.endTime %>';
+      const startTime = '<%= product.startTime %>';
+      const pro_id = '<%= product._id %>';
+      const currentUser = '<%= currentUser._id %>';
+      const wallet = '<%= currentUser.wallet %>';
+      const username = '<%= currentUser.username %>';
+     </script>
   </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -131,19 +121,34 @@
         </div>
       </div>
     <main class="container mt-2">
-        <div class="mb-2">
+        <div class="row mb-2">
 
             <% if(Date.now()<product.startTime) {%> 
+              <div class="col-md-6">
+
                 <button class="btn btn-dark">Starts In</button>
                 <button id="hour" class="btn btn-danger">00</button> :
                 <button id="mint" class="btn btn-danger">00</button> :
                 <button id="secs" class="btn btn-danger">00</button>
+              </div>
+              <div class="col-md-6">
+                <span class="spectate"><i class="fas fa-eye"></i>  <span id="activeusers"></span></span>  
+              </div>
+                
                <% }else if(Date.now()<product.endTime){ %> 
 
-                <button class="btn btn-dark">Ends In</button>
+                <div class="col-md-6">
+
+                  <button class="btn btn-dark">Ends In</button>
                 <button id="hour" class="btn btn-danger">00</button> :
                 <button id="mint" class="btn btn-danger">00</button> :
                 <button id="secs" class="btn btn-danger">00</button>
+
+                </div>
+                <div class="col-md-6">
+                  <span class="spectate"><i class="fas fa-eye"></i>  <span id="activeusers"></span></span>  
+                </div>
+                
                       
                 <% } else if(product.sold){ %> 
 
@@ -181,16 +186,27 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <% } %>
+
+        <div class="notifications">
+          
+        </div>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-3">
                   <div class="contain">
-                    <img src="<%= product.image[0].url%>" class="card-img-top" alt="...">
-                    <div class="content">
-                      <a  data-bs-toggle="modal" href="#exampleModal2">
-                        Launch demo modal
-                      </a>
-                    </div>
+                    <% if(product.image.length == 0){ %> 
+                    <img src="https://homestaymatch.com/images/no-image-available.png" class="card-img-top" alt="...">
+                    <% }else { %> 
+                      <img src="<%= product.image[0].url%>" class="card-img-top" alt="...">
+                      <div class="content">
+                        <a  data-bs-toggle="modal" href="#exampleModal2">
+                          Launch demo modal
+                        </a>
+                      </div>
+                      <% } %> 
+                      
+                    
                   </div>
                   
                     <div class="card-body">
@@ -307,7 +323,12 @@
                                         <div class="carousel-inner" style="margin-left: auto;
                                         margin-right: auto; width: 70%;">
                                           <div class="carousel-item active">
-                                            <img src="<%= product.image[0].url %>" class="d-block w-100" alt="...">
+                                            <% if(product.image.length == 0){ %> 
+                                            <img src="https://homestaymatch.com/images/no-image-available.png" class="d-block w-100" alt="...">
+                                            <% } else { %> 
+                                              <img src="<%= product.image[0].url %>" class="d-block w-100" alt="...">
+                                              <% } %> 
+
                                             
                                           </div>
                                           <% for(let i=1;i<product.image.length;i++) {%> 
@@ -341,10 +362,10 @@
             </div>
             <div class="col-md-6">
                 <% if(currentUser && Date.now()>=product.startTime &&Date.now()<=product.endTime ){ %> 
-                <form action="/products/<%= product._id %>/biddings" method="POST" novalidate class="validated-form">
+                <form novalidate class="validated-form" id="input-form">
                 <div class="row mb-3">
                     <div class="col-6">
-                        <input class="form-control" placeholder="Enter Bid" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" required>
+                        <input class="form-control" id="BidValue" placeholder="Enter Bid" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" required>
                         <div class="invalid-feedback">
                             Please enter a valid Bid.
                           </div>
@@ -352,7 +373,7 @@
                     
                     <div class="col-3">
                            
-                        <button class="btn btn-success" type="submit">Enter</button>
+                        <button class="btn btn-success" id="inputButton" type="submit">Enter</button>
                     </div>
                         
                    
@@ -360,10 +381,10 @@
             </form>
             <% } else { %> 
         
-                <form action="/products/<%= product._id %>/biddings" method="POST" novalidate class="validated-form">
+                <form novalidate class="validated-form" id="input-form">
                     <div class="row mb-3">
                         <div class="col-6">
-                            <input class="form-control" placeholder="Restricted" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" readonly required>
+                            <input class="form-control" id="BidValue" placeholder="Restricted" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" readonly required>
                             <div class="invalid-feedback">
                                 Please enter a valid Bid.
                               </div>
@@ -371,7 +392,7 @@
                         
                         <div class="col-3">
                                
-                            <button class="btn btn-success" disabled type="submit">Enter</button>
+                            <button class="btn btn-success" id="inputButton" disabled type="submit">Enter</button>
                         </div>
                             
                        
@@ -389,7 +410,7 @@
                   
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="table-body">
                 <% if(bid.length == 0){ %> 
                   <tr>
                     <th scope="row">No Bids Placed</th>
@@ -411,61 +432,27 @@
             </div>
         </div>
     </main>
-   
-    <script src='/javascripts/validateinput.js' ></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+    <script id="infoTemplate" type="text/html">
+
+      <tr class="<%= colors[(Math.floor(Math.random()*100))%7] %> ">
+        <th scope="row">@{{username}}</th>
+        <td>{{price}} UC</td>
+      </tr>
+    </script>
+    <script id="errorTemplate" type="text/html">
+
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{call}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </script>
+    
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
-<script>
-    document.getElementById("whatsapp").href  = "https://web.whatsapp.com/send?text=" + window.location.href;
-    document.getElementById("telegram").href  = "https://telegram.me/share/url?url=" + window.location.href;
-    document.getElementById("twitter").href  = "https://twitter.com/share?url=" + window.location.href;
-    var present = Date.now();
-    var end = Date.parse('<%=product.endTime%>')
-    if(present <= end )
-    {
-        var countDownDate =  Date.parse('<%= product.startTime %>');
-        if(present >= countDownDate)
-        {
-            countDownDate = end;
-        }
-        // Update the count down every 1 second
-        var x = setInterval(function() {
-
-        // Get today's date and time
-        var now = new Date().getTime();
-
-          // Find the distance between now and the count down date
-        var distance = countDownDate - now;
-
-        // Time calculations for days, hours, minutes and seconds
-            
-          var hr = Math.floor((distance) / (1000 * 60 * 60));
-         var min = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-         var sec = Math.floor((distance % (1000 * 60)) / 1000);
-
-
-        var hrs="";
-        var mins="";
-        var secs="";
-         if(hr<=9) hrs =  "0";
-         if(min<=9) mins = "0";
-        if(sec<=9) secs = "0";
-        // Display the result in the element with id="demo"
-         document.getElementById("hour").innerHTML = hrs + hr;
-         document.getElementById("mint").innerHTML = mins + min;
-         document.getElementById("secs").innerHTML = secs + sec;
-
-        // If the count down is finished, write some text
-        if (distance < 0)
-         {
-            clearInterval(x);
-            location.reload();
-         }
-        }, 1000);
-    }
-
-   
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script src='/javascripts/showpage.js'></script>
 
     
 </body>
