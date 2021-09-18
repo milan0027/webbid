@@ -1,29 +1,5 @@
 
 const socket = io();
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-// (function () {
-//     'use strict'
-    
-//     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//     var forms = document.querySelectorAll('.validated-form')
-    
-     
-//     // Loop over them and prevent submission
-//     Array.prototype.slice.call(forms)
-//       .forEach(function (form) {
-//         form.addEventListener('submit', function (event) {
-         
-//           if (!form.checkValidity()) {
-//             event.preventDefault()
-//             event.stopPropagation()
-//           }
-    
-//           form.classList.add('was-validated')
-//         }, false)
-//       })
-     
-    
-// })()
 
     document.getElementById("whatsapp").href  = "https://web.whatsapp.com/send?text=" + window.location.href;
     document.getElementById("telegram").href  = "https://telegram.me/share/url?url=" + window.location.href;
@@ -81,17 +57,34 @@ const _table = document.querySelector('#table-body')
 const _notifications = document.querySelector('.notifications')
 
 //templates
-const infoTemplate = document.querySelector('#infoTemplate').innerHTML
+const infoTemplateWarning = document.querySelector('#infoTemplateWarning').innerHTML
+const infoTemplateLight = document.querySelector('#infoTemplateLight').innerHTML
 const errorTemplate = document.querySelector('#errorTemplate').innerHTML
 
 
 //sockets
 socket.on('value', (info) =>{
-    const html = Mustache.render(infoTemplate, {
-        username: info.username,
-        price: info.price
-    })
-    document.querySelector('#table-body').insertAdjacentHTML('afterbegin', html)
+   
+    if( info.username === username )
+    {
+        const html = Mustache.render(infoTemplateWarning, {
+            username: info.username,
+            price: info.price
+           
+        })
+        document.querySelector('#table-body').insertAdjacentHTML('afterbegin', html)
+
+    }
+    else
+    {
+        const html = Mustache.render(infoTemplateLight, {
+            username: info.username,
+            price: info.price
+            
+        })
+        document.querySelector('#table-body').insertAdjacentHTML('afterbegin', html)
+    }
+    
     document.querySelector('#BidValue').setAttribute('min',parseInt(info.price)+1)
 
 })
@@ -130,7 +123,7 @@ _inputForm.addEventListener('submit', (e)=>{
 
         if(call){
             const html = Mustache.render(errorTemplate, { call })
-            _notifications.insertAdjacentHTML('beforebegin', html)
+            _notifications.insertAdjacentHTML('afterbegin', html)
             
         }
     })
@@ -139,4 +132,9 @@ const room = pro_id
     
 socket.emit('join', {username, room}, ()=>{
     console.log('joined')
+})
+
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
 })

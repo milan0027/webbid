@@ -21,7 +21,6 @@ const Bidding = require('./models/biddings');
 
 const userRoutes = require('./routes/users')
 const productsRoutes = require('./routes/products')
-const biddingsRoutes = require('./routes/biddings')
 const trendRoutes = require('./routes/trending')
 const liveRoutes = require('./routes/live')
 const upcomingRoutes = require('./routes/upcoming')
@@ -91,7 +90,7 @@ app.use('/trending', trendRoutes)
 app.use('/live', liveRoutes)
 app.use('/upcoming', upcomingRoutes)
 app.use('/user', LoginUserRoutes)
-app.use('/products/:id/biddings', biddingsRoutes)
+
 
 io.on('connection', (socket =>{
     console.log('new web socket')
@@ -175,17 +174,29 @@ app.get('/all/:category', catchAsync(async (req, res)=>{
 
 
 
-app.get('/', (req, res) => {
-    res.render('home')
-});
+app.get('/', catchAsync(async (req, res) => {
+    if(req.isAuthenticated())
+    {
+        const d = Date.now()
+        const type = "All"
+        const category = undefined;
+        const products = await Product.find({endTime:{ $gt: d }});
+        res.render('products/index', { products, category, type })
+    }
+    else
+    {
+        res.render('users/login')
+    }
+    
+}));
 
 app.all('*', (req,res,next)=>{
-    next(new ExpressError('page not found', 404))
+    next(new ExpressError('404!!! Page Not Found', 404))
 })
 
 app.use((err,req,res,next)=>{
     const {statusCode = 500} = err;
-    if(!err.message) err.message='Something went wrong!!!'
+    err.message='OOPS! Something went wrong! Could not find what you were looking for!'
     res.status(statusCode).render('error', { err })
     
 })

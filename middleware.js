@@ -8,7 +8,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
 
         req.session.returnTo = req.originalUrl;
-        req.flash('error', 'Sign in to continue');
+        req.flash('error', 'Log in to continue');
 
         return res.redirect('/login');
 
@@ -35,8 +35,14 @@ module.exports.validateProduct = (req, res, next) => {
 
 
 module.exports.isOwnerAndLimit = async (req, res, next)=>{
-    const {id} = req.params;
-    const product = await Product.findById(id);
+    
+    
+    try{
+       const {id} = req.params;
+       const product = await Product.findById(id);
+
+    
+    
     if(Date.now()>product.startTime)
     {
         req.flash('error', 'Action Not Allowed!!!')
@@ -47,12 +53,23 @@ module.exports.isOwnerAndLimit = async (req, res, next)=>{
         req.flash('error', 'Action Not Allowed!!!')
         return res.redirect(`/products/${id}`)
     }
+    }catch(e){
+    req.flash('error','Item does not Exist or is Deleted')
+    return res.redirect('/products')
+
+    }
+
     next();
 }
 
 module.exports.isOwnerAndCondition = async (req, res, next)=>{
-    const {id} = req.params;
-    const product = await Product.findById(id);
+   
+    
+    try{
+        const {id} = req.params;
+        const product = await Product.findById(id);
+
+    
     if(!product)
     {
         req.flash('error','Item does not Exist or is Deleted')
@@ -67,6 +84,11 @@ module.exports.isOwnerAndCondition = async (req, res, next)=>{
     {
         req.flash('error', 'Action Not Allowed!!!')
         return res.redirect(`/products/${id}`)
+    }
+    }catch(e){
+    req.flash('error','Item does not Exist or is Deleted')
+    return res.redirect('/products')
+
     }
     next();
 }

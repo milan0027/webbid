@@ -16,6 +16,10 @@
             event.preventDefault()
             event.stopPropagation()
           }
+          else
+          {
+            document.querySelector('.submit-button').setAttribute('disabled', 'disabled')
+          }
     
           form.classList.add('was-validated')
         }, false)

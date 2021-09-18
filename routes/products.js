@@ -12,7 +12,7 @@ const { storage, cloudinary} = require('../cloudinary');
 const upload = multer({ storage });
 
 router.route('/')
-.get(catchAsync( async (req, res) => {
+.get(isLoggedIn, catchAsync( async (req, res) => {
     const d = Date.now()
     const type = "All"
     const category = undefined;
@@ -98,11 +98,7 @@ router.route('/:id')
 
 router.get('/:id/edit',isLoggedIn,isOwnerAndLimit, catchAsync( async (req, res) => {
     const product = await Product.findById(req.params.id)
-    if(!product)
-    {
-        req.flash('error','Item does not Exist or is Deleted')
-        return res.redirect('/products')
-    } 
+    
     res.render('products/edit', { product });
 }))
 

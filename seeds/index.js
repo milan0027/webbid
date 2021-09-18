@@ -29,11 +29,11 @@ const seedDB = async () => {
         const pro = new Product({
             title: `${sample(descriptors)} ${sample(places)}`,
             image: [{
-                url: 'https://res.cloudinary.com/webbid/image/upload/v1630764070/Webbid/kqovfbymzexrjojsuhfu.png',
-                filename: 'Webbid/kqovfbymzexrjojsuhfu'
+                url: 'https://res.cloudinary.com/webbid/image/upload/w_800,h_600,c_pad,b_white/v1631973361/Webbid/xkqmlufxthpyddfyesk7.png',
+                filename: 'Webbid/xkqmlufxthpyddfyesk7'
               }],
             price,
-            owner: "61291ea211e30c5cf0ce267f",
+            owner: "6145ef9d2e63733124124ac4",
             favCount: Math.floor(Math.random()*100),
             description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
             startTime: d.getTime(),

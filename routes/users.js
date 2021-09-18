@@ -44,7 +44,7 @@ router.route('/login')
 router.get('/logout', (req, res) => {
     req.logout();
     req.flash('success', "Session Logged Out");
-    res.redirect('/products');
+    res.redirect('/login');
 })
 
 module.exports = router

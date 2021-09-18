@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const Product = require('../models/product');
+const { isLoggedIn } = require('../middleware');
 
 router.route('/')
-.get( catchAsync(async (req,res) =>{
+.get(isLoggedIn, catchAsync(async (req,res) =>{
     var d = Date.now();
     const type = "Upcoming"
     const category = undefined;
@@ -15,7 +16,7 @@ router.route('/')
 
 
 router.route('/:category')
-.get( catchAsync(async (req, res) =>{
+.get(isLoggedIn, catchAsync(async (req, res) =>{
     const {category} = req.params
     const d = Date.now()
     const type = "Upcoming"
