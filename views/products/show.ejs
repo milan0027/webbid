@@ -5,9 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webbid</title>
-    
+    <link rel="icon" href="/logo/favicon.png">
     <link href="/stylesheets/index.css" rel = "stylesheet">
     <link href="/stylesheets/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   
     <script> 
@@ -199,7 +200,7 @@
                 <div class="card mb-3">
                   <div class="contain">
                     <% if(product.image.length == 0){ %> 
-                    <img src="https://homestaymatch.com/images/no-image-available.png" class="card-img-top" alt="...">
+                    <img src="https://res.cloudinary.com/webbid/image/upload/v1632008118/Webbid/cropped_no_image_vhl7vd.jpg" class="card-img-top" alt="...">
                     <% }else { %> 
                       <img src="<%= product.image[0].url%>" class="card-img-top" alt="...">
                       <div class="content">
@@ -330,10 +331,10 @@
 
                                       <div id="carouselExampleControls" class="carousel slide carousel-dark" data-bs-ride="carousel">
                                         <div class="carousel-inner" style="margin-left: auto;
-                                        margin-right: auto; width: 70%;">
+                                        margin-right: auto; width: 60%;">
                                           <div class="carousel-item active">
                                             <% if(product.image.length == 0){ %> 
-                                            <img src="https://homestaymatch.com/images/no-image-available.png" class="d-block w-100" alt="...">
+                                            <img src="https://res.cloudinary.com/webbid/image/upload/v1632008118/Webbid/cropped_no_image_vhl7vd.jpg" class="d-block w-100" alt="...">
                                             <% } else { %> 
                                               <img src="<%= product.image[0].url %>" class="d-block w-100" alt="...">
                                               <% } %> 
@@ -376,12 +377,12 @@
                     <div class="col-6">
                         <input class="form-control" id="BidValue" placeholder="Enter Bid" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" required>
                         <div class="invalid-feedback">
-                            Please enter a valid Bid.
+                            Please enter a higher Bid.
                           </div>
                     </div>
                     
                     <div class="col-3">
-                           
+               
                         <button class="btn btn-dark" id="inputButton" type="submit">Enter</button>
                     </div>
                         
@@ -395,7 +396,7 @@
                         <div class="col-6">
                             <input class="form-control" id="BidValue" placeholder="Restricted" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" readonly required>
                             <div class="invalid-feedback">
-                                Please enter a valid Bid.
+                                Please enter a higher Bid.
                               </div>
                         </div>
                         

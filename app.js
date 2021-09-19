@@ -27,6 +27,7 @@ const upcomingRoutes = require('./routes/upcoming')
 const LoginUserRoutes = require('./routes/LoginUser');
 const {generateValue} = require('./utils/generateValue');
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/activeusers');
+const { isLoggedIn } = require('./middleware');
 
 
 mongoose.connect('mongodb://localhost:27017/bidweb', {
@@ -116,14 +117,14 @@ io.on('connection', (socket =>{
 
     const bidUser = bid.currentuser;
 
+    if(product.owner.equals(bidUser._id))
+    {
+        return callback('You cannot Bid on your own items')
+    }
     if(bidding.price>bidUser.wallet)
     {
         return callback('Insufficient Balance in Wallet')
         
-    }
-    if(product.owner.equals(bidUser._id))
-    {
-        return callback('You cannot Bid on your own items')
     }
     if(bidding.price<=product.lastbid) {
         return callback('Bid Value Must be Greater')
@@ -162,7 +163,7 @@ io.on('connection', (socket =>{
 
 
 
-app.get('/all/:category', catchAsync(async (req, res)=>{
+app.get('/all/:category', isLoggedIn, catchAsync(async (req, res)=>{
 
     const {category} = req.params
     const d = Date.now()
@@ -196,8 +197,17 @@ app.all('*', (req,res,next)=>{
 
 app.use((err,req,res,next)=>{
     const {statusCode = 500} = err;
-    err.message='OOPS! Something went wrong! Could not find what you were looking for!'
-    res.status(statusCode).render('error', { err })
+    err.message = statusCode == 404 ? '404!!! Page Not Found' : 'OOPS! Something went wrong!'
+    if(req.isAuthenticated())
+    {
+        res.status(statusCode).render('error', { err })
+
+    }
+    else
+    {
+        res.status(statusCode).render('errornew', { err })
+    }
+    
     
 })
 

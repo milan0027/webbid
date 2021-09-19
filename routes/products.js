@@ -87,7 +87,7 @@ router.route('/:id')
 .delete(isLoggedIn,isOwnerAndLimit, catchAsync(async (req, res) => {
     const { id } = req.params;
     const user  =  await User.findById(req.user._id);
-    const ind = user.itemsAdded.indexOf(id);
+    const ind = await user.itemsAdded.indexOf(id);
     await user.itemsAdded.splice(ind, 1);
     await user.save();
     await Product.findByIdAndDelete(id);
