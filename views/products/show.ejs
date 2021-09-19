@@ -124,7 +124,7 @@
           </ul>
         </div>
       </div>
-    <main class="container mt-2">
+    <main class="container mt-2 mb-5">
         <div class="row mb-2">
 
             <% if(Date.now()<product.startTime) {%> 
@@ -196,7 +196,7 @@
         </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <div class="card mb-3">
                   <div class="contain">
                     <% if(product.image.length == 0){ %> 
@@ -370,18 +370,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <% if(currentUser && Date.now()>=product.startTime &&Date.now()<=product.endTime ){ %> 
                 <form novalidate class="validated-form" id="input-form">
                 <div class="row mb-3">
-                    <div class="col-6">
+                    <div class="col-8">
+                      <div class="input-group">
+
+                     
                         <input class="form-control" id="BidValue" placeholder="Enter Bid" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" required>
+                        <span class="input-group-text">.00 UC</span>
                         <div class="invalid-feedback">
                             Please enter a higher Bid.
                           </div>
+                        </div>
                     </div>
                     
-                    <div class="col-3">
+                    <div class="col-4">
                
                         <button class="btn btn-dark" id="inputButton" type="submit">Enter</button>
                     </div>
@@ -393,14 +398,17 @@
         
                 <form novalidate class="validated-form" id="input-form">
                     <div class="row mb-3">
-                        <div class="col-6">
+                        <div class="col-8">
+                          <div class="input-group">
                             <input class="form-control" id="BidValue" placeholder="Restricted" type="number" min="<%= product.lastbid+1%>" id="price" name="bidding[price]" readonly required>
+                            <span class="input-group-text">.00 UC</span>
                             <div class="invalid-feedback">
                                 Please enter a higher Bid.
                               </div>
+                            </div>
                         </div>
                         
-                        <div class="col-3">
+                        <div class="col-4">
                                
                             <button class="btn btn-dark" id="inputButton" disabled type="submit">Enter</button>
                         </div>
@@ -446,6 +454,9 @@
             </div>
         </div>
     </main>
+    <footer class="bg-dark">
+      WEBBID
+    </footer>
     <script id="infoTemplateWarning" type="text/html">
 
       <tr class="table-warning">

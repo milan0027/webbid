@@ -121,7 +121,7 @@
           </ul>
         </div>
       </div>
-    <main class="container mt-3">
+    <main class="container mt-3 mb-5">
       <% if(success && success.length) {%>
         <div class="alert alert-dark alert-dismissible fade show" role="alert">
             <%= success %>
@@ -140,11 +140,39 @@
           
 
     </main>
+
+    <footer class="bg-dark">
+      WEBBID
+    </footer>
     
     <script src='/javascripts/validateinput.js' ></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<script>
+  const dateInput = document.getElementById('startTime')
+  const invalid = document.getElementById('currentTime')
+  let tvout = new Date(Date.now()+300000)
+  let timesout = tvout.getFullYear() +'-' + appendZero(tvout.getMonth()+1) + '-' + appendZero(tvout.getDate())+'T'+appendZero(tvout.getHours())+':'+appendZero(tvout.getMinutes())
+  dateInput.setAttribute('min', timesout)
+  invalid.innerHTML = tvout.toLocaleString('en-US')
+  setInterval( changeMin , 60000)
+  function appendZero(val)
+  {
+    if(val<10)
+      return '0'+val
+    else
+    return val
+  }
+  function changeMin()
+  {
+    let tv = new Date(Date.now()+300000)
+    let times = tv.getFullYear() +'-' + appendZero(tv.getMonth()+1) + '-' + appendZero(tv.getDate())+'T'+appendZero(tv.getHours())+':'+appendZero(tv.getMinutes())
+    dateInput.setAttribute('min', times)
+    invalid.innerHTML = tv.toLocaleString('en-US')
+    
 
+  }
+</script>
 
     
 </body>

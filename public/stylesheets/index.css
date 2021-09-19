@@ -1,3 +1,8 @@
+body{
+    min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+  }
 .cardItem {
     text-decoration: none;
 }
@@ -100,3 +105,17 @@
     left: 8px;
     top: 30px;
 }
+
+footer{
+    color: white;
+    padding: 8px;
+    font-size: 24px;
+    font-family: Consolas;
+    letter-spacing: 12px;
+    
+    margin-top: auto;
+    width: 100%;
+    
+    text-align: center;
+ 
+ }
