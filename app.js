@@ -2,6 +2,8 @@ if(process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
 
+
+
 const express = require('express');
 const socketio = require('socket.io')
 const path = require('path');
@@ -30,12 +32,13 @@ const {generateValue} = require('./utils/generateValue');
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/activeusers');
 const { isLoggedIn } = require('./middleware');
 
-
-mongoose.connect('mongodb://localhost:27017/bidweb', {
+const MongoStore = require('connect-mongo');
+const dburl = process.env.DB_URL ||'mongodb://localhost:27017/bidweb'
+mongoose.connect( dburl, {
+    useUnifiedTopology: true,
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true
-});
+    useCreateIndex: true
+})
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -57,12 +60,22 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
+const secret = process.env.SECRET || 'ThisIsTestingTheKey123'
 
+const store =  MongoStore.create({
+       
+    mongoUrl: dburl,
+    secret,
+    touchAfter: 24*60*60
+})
 const sessionConfig = {
+   
+   store,
     name: 'current_session',
-    secret: 'ThisIsTestingTheKey123',
+    secret,
     resave: false,
     saveUninitialized: true,
+    
     cookie: {
         httpOnly: true,
         //secure: true,
@@ -214,7 +227,7 @@ app.use((err,req,res,next)=>{
     
     
 })
-
-server.listen(3000, () => {
-    console.log('Serving on port 3000')
+const port = process.env.PORT || 3000
+server.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
